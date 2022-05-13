@@ -3,7 +3,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>samtools</artifactId>
-    <version>1.15.1</version>
+    <version>1.15.1-1</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -14,6 +14,7 @@
 
     <properties>
         <samtools.version>1.15.1</samtools.version>
+	<skip.apt.repo>false</skip.apt.repo>
         <skip.compile>false</skip.compile>
     </properties>
 
