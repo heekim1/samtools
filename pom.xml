@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>samtools</artifactId>
     <version>1.15.1</version>
-    <packaging>deb</packaging>
+    <packaging>pom</packaging>
 
     <parent>
         <groupId>com.heekim.dev</groupId>
@@ -44,7 +44,7 @@
                             <executable>wget</executable>
                             <arguments>
                                 <argument>--no-check-certificate</argument>
-                                <argument>https://github.com/${project.artifactId}/${project.artifactId}/releases/${samtools.version}/${project.artifactId}-${samtools.version}.tar.bz2</argument>
+				<argument>https://github.com/${project.artifactId}/${project.artifactId}/releases/download/${samtools.version}/${project.artifactId}-${samtools.version}.tar.bz2</argument>
                             </arguments>
                         </configuration>
                     </execution>
