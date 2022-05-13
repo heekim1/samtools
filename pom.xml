@@ -1,0 +1,91 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>samtools</artifactId>
+    <version>1.15.1</version>
+    <packaging>deb</packaging>
+
+    <parent>
+        <groupId>com.heekim.dev</groupId>
+        <artifactId>parent-pom</artifactId>
+        <version>1.1.0</version>
+    </parent>
+
+    <properties>
+        <samtools.version>1.15.1</samtools.version>
+        <skip.compile>false</skip.compile>
+    </properties>
+
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>https://raw.githubusercontent.com/samtools/samtools/develop/LICENSE</url>
+        </license>
+    </licenses>
+
+    <build>
+        <plugins>
+            <!-- turns out source code could be downloaded from either sourceforge or github, switching to github would remove the dependency of wget, http://www.htslib.org/ -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.5.0</version>
+                <executions>
+                    <execution>
+                        <id>download-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skip.compile}</skip>
+                            <workingDirectory>${project.build.directory}/checkout</workingDirectory>
+                            <executable>wget</executable>
+                            <arguments>
+                                <argument>--no-check-certificate</argument>
+                                <argument>https://github.com/${project.artifactId}/${project.artifactId}/releases/${samtools.version}/${project.artifactId}-${samtools.version}.tar.bz2</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>compile-binaries</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skip.compile}</skip>
+                            <workingDirectory>${project.basedir}</workingDirectory>
+                            <executable>docker</executable>
+                            <arguments>
+                                <argument>run</argument>
+                                <argument>--rm</argument>
+                                <argument>-i</argument>
+                                <argument>-v</argument>
+                                <argument>${project.basedir}/build:/src</argument>
+                                <argument>-v</argument>
+                                <argument>${project.basedir}/target/bin:/usr/local</argument>
+                                <argument>-v</argument>
+                                <argument>${project.basedir}/target/checkout:/checkout</argument>
+				<!-- set user id & group id -->
+                                <argument>-e</argument>
+                                <argument>USERID=${userid}</argument>
+                                <argument>-e</argument>
+                                <argument>GROUPID=${groupid}</argument>
+                                <argument>-e</argument>
+                                <argument>NAME=${project.artifactId}</argument>
+                                <argument>-e</argument>
+                                <argument>SAMTOOLS_VERSION=${samtools.version}</argument>
+                                <argument>-e</argument>
+                                <argument>VERSION=${project.version}</argument>
+                                <argument>${docker.dev-base.name}</argument>
+                                <argument>/src/build.sh</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
