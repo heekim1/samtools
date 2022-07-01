@@ -8,4 +8,3 @@ RUN echo "deb [trusted=yes] file:///tmp/deb /" > /etc/apt/sources.list.d/tmp.lis
     apt-get install -y --allow-unauthenticated ${name}-${version} && \
     rm -f /etc/apt/sources.list.d/tmp.list /tmp/deb/*
 
-USER runner
